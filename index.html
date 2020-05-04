@@ -15,12 +15,16 @@
         <hr/>
         <span v-if="seen">visible</span><br/>
         <ol>
-            <li v-for="item in items">{{item.text}}</li>
+            <todo-item v-for="item in items" v-bind:todo="item" v-bind:key="item.id"></todo-item>
         </ol>
         <input v-model="message.body"/>
         <button v-on:click="reverse">Reverse</button>
     </div>
     <script>
+        Vue.component('todo-item', {
+            props: ['todo'],
+            template: '<li> {{todo.id}}:{{todo.text}} </li>'
+        });
         var app = new Vue({
             el: '#app',
             data: {
@@ -30,7 +34,7 @@
                     title: 'a title ' + new Date().toLocaleString(), 
                     body: 'a body'
                 },
-                items: [{text:"text 1"}, {text:"text 2"}]
+                items: [{text:"text 1", id:0}, {text:"text 2",id:1}]
             },
             methods: {
                 reverse: function(){
