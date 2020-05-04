@@ -3,67 +3,82 @@
 
 <head>
     <title>My first Vue app</title>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 </head>
 
 <body>
     <div id="app">
         <span v-bind:title="message.title">{{message.title}}</span>
-        <hr/>
-        {{message.body}}
-        <hr/>
-        <span v-if="seen">visible</span><br/>
+        <hr />
+        {{message.body.split('').reverse().join('') }}
+        <hr />
+        <span v-if="seen">visible</span><br />
         <ol>
             <todo-item v-for="item in items" v-bind:todo="item" v-bind:key="item.id"></todo-item>
         </ol>
-        <input v-model="message.body"/>
+        <input v-model="message.body" />
         <button v-on:click="reverse">Reverse</button>
         <button v-on:click="addTodo">Add</button>
+        <button v-on:click="toggle">Toggle</button>
+        <div>
+            {{rawHtml}}<br><span v-html="rawHtml">should be replaced</span>
+            <button v-bind:disabled="!seen">Button</button>
+        </div>
+        <form action="/" method="post" v-on:submit.prevent="onSubmit">
+            <button v-bind:disabled="!seen" type="submit">Submit</button>
+        </form>
     </div>
     <script>
         Vue.component('todo-item', {
             props: ['todo'],
-            template: '<li> {{todo.id}}:{{todo.text}} </li>'
+            template: '<li v-bind:id=todo.id v-bind:title=todo.text> {{todo.id}}:{{todo.text}} </li>'
         });
         var data = {
-                seen: true,
-                message: 
-                {
-                    title: 'a title ' + new Date().toLocaleString(), 
-                    body: 'a body'
-                },
-                items: [{text:"text 1", id:0}, {text:"text 2",id:1}]
-            };
+            rawHtml: '<span> un <b>span</b></span>',
+            seen: true,
+            message:
+            {
+                title: 'a title ' + new Date().toLocaleString(),
+                body: 'a body'
+            },
+            items: [{ text: "text 1", id: 0 }, { text: "text 2", id: 1 }]
+        };
         var app = new Vue({
             data: data,
             methods: {
-                reverse: function(){
+                reverse: function () {
                     this.message.body = this.message.body.split('').reverse().join('');
                 },
-                addTodo: function(){
-                    this.items.push({text:this.message.body, id:this.items.length});
+                addTodo: function () {
+                    this.items.push({ text: this.message.body, id: this.items.length });
+                },
+                toggle: function(){
+                    this.seen = !this.seen;
+                },
+                onSubmit: function(){
+                    console.log('submit');
                 }
             },
-            beforeCreate: function(){
+            beforeCreate: function () {
                 console.log('beforeCreate');
             },
-            created: function(){
+            created: function () {
                 console.log('created');
             },
-            beforeMount: function(){
+            beforeMount: function () {
                 console.log('beforeMount');
             },
-            mounted: function(){
+            mounted: function () {
                 console.log('mounted');
             },
-            beforeUpdate: function(){
+            beforeUpdate: function () {
                 console.log('beforeUpdate');
             },
-            updated: function(){
+            updated: function () {
                 console.log('updated');
             },
-            destroyed: function(){
+            destroyed: function () {
                 console.log('destroyed');
             }
         }).$mount('#app');
@@ -71,4 +86,5 @@
         console.log(app.message === data.message);
     </script>
 </body>
+
 </html>
