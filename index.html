@@ -26,9 +26,7 @@
             props: ['todo'],
             template: '<li> {{todo.id}}:{{todo.text}} </li>'
         });
-        var app = new Vue({
-            el: '#app',
-            data: {
+        var data = {
                 seen: true,
                 message: 
                 {
@@ -36,7 +34,9 @@
                     body: 'a body'
                 },
                 items: [{text:"text 1", id:0}, {text:"text 2",id:1}]
-            },
+            };
+        var app = new Vue({
+            data: data,
             methods: {
                 reverse: function(){
                     this.message.body = this.message.body.split('').reverse().join('');
@@ -44,8 +44,31 @@
                 addTodo: function(){
                     this.items.push({text:this.message.body, id:this.items.length});
                 }
+            },
+            beforeCreate: function(){
+                console.log('beforeCreate');
+            },
+            created: function(){
+                console.log('created');
+            },
+            beforeMount: function(){
+                console.log('beforeMount');
+            },
+            mounted: function(){
+                console.log('mounted');
+            },
+            beforeUpdate: function(){
+                console.log('beforeUpdate');
+            },
+            updated: function(){
+                console.log('updated');
+            },
+            destroyed: function(){
+                console.log('destroyed');
             }
-        });
+        }).$mount('#app');
+        console.log(app.$data.message === data.message);
+        console.log(app.message === data.message);
     </script>
 </body>
 </html>
