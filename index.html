@@ -9,7 +9,8 @@
 
 <body>
     <div id="app">
-        <span v-bind:title="message.title">{{message.title}}</span>
+        <span v-bind:title="message.title">{{message.title}}</span></br>
+        <span v-bind:title="reverseMessage.title">{{reverseMessage.title}}</span>
         <hr />
         {{message.body.split('').reverse().join('') }}
         <hr />
@@ -46,6 +47,20 @@
         };
         var app = new Vue({
             data: data,
+            computed: {
+                reverseMessage: {
+                    get: function (){
+                        console.log('calling reverseMessage');
+                        return {
+                            body: this.message.body,
+                            title: "reversed:" + this.message.title.split('').reverse().join('')
+                        };
+                    },
+                    set: function(title){
+                        this.message.title = title.split('').reverse().join('');
+                    }
+                }
+            },
             methods: {
                 reverse: function () {
                     this.message.body = this.message.body.split('').reverse().join('');
