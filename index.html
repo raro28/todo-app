@@ -19,6 +19,7 @@
         </ol>
         <input v-model="message.body"/>
         <button v-on:click="reverse">Reverse</button>
+        <button v-on:click="addTodo">Add</button>
     </div>
     <script>
         Vue.component('todo-item', {
@@ -39,6 +40,9 @@
             methods: {
                 reverse: function(){
                     this.message.body = this.message.body.split('').reverse().join('');
+                },
+                addTodo: function(){
+                    this.items.push({text:this.message.body, id:this.items.length});
                 }
             }
         });
