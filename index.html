@@ -29,13 +29,23 @@
         <form action="/" method="post" v-on:submit.prevent="onSubmit">
             <button v-bind:disabled="!seen" type="submit">Submit</button>
         </form>
+        </hr>
+        <p>
+            Ask a yes/no question:
+            <input v-model="question">
+        </p>
+        <p>{{ answer }}</p>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
     <script>
         Vue.component('todo-item', {
             props: ['todo'],
             template: '<li v-bind:id=todo.id v-bind:title=todo.text> {{todo.id}}:{{todo.text}} </li>'
         });
         var data = {
+            question: '',
+            answer: 'I cannot give you an answer until you ask a question!',
             rawHtml: '<span> un <b>span</b></span>',
             seen: true,
             message:
@@ -47,16 +57,22 @@
         };
         var app = new Vue({
             data: data,
+            watch: {
+                question: function(newQ, oldQ){
+                    this.answer = 'waiting input';
+                    this.debouncedGetAnswer();
+                }
+            },
             computed: {
                 reverseMessage: {
-                    get: function (){
+                    get: function () {
                         console.log('calling reverseMessage');
                         return {
                             body: this.message.body,
                             title: "reversed:" + this.message.title.split('').reverse().join('')
                         };
                     },
-                    set: function(title){
+                    set: function (title) {
                         this.message.title = title.split('').reverse().join('');
                     }
                 }
@@ -68,11 +84,23 @@
                 addTodo: function () {
                     this.items.push({ text: this.message.body, id: this.items.length });
                 },
-                toggle: function(){
+                toggle: function () {
                     this.seen = !this.seen;
                 },
-                onSubmit: function(){
+                onSubmit: function () {
                     console.log('submit');
+                },
+                getAnswer: function() {
+                    console.log('getting answer');
+                    this.answer = 'loading...';
+                    var vm = this;
+                    axios.get('https://yesno.wtf/api')
+                        .then(function (response) {
+                            vm.answer = _.capitalize(response.data.answer);
+                        })
+                        .catch(function (error){
+                            vm.answer = 'Error: ' + error
+                        });
                 }
             },
             beforeCreate: function () {
@@ -80,6 +108,8 @@
             },
             created: function () {
                 console.log('created');
+
+                this.debouncedGetAnswer = _.debounce(this.getAnswer, 500);
             },
             beforeMount: function () {
                 console.log('beforeMount');
