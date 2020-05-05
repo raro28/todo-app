@@ -9,6 +9,11 @@
 
 <body>
     <div id="app">
+        <h1>{{counter}}</h1>
+        <button v-on:click="counter +=1 ">Add</button>
+        <button v-on:click="counterAdd">Add</button>
+        <button v-on:click="inlineCall('test')">test</button>
+        <button v-on:click="inlineCallEvent('test', $event)">test with event</button>
         <span v-bind:title="message.title">{{message.title}}</span></br>
         <span v-bind:title="reverseMessage.title">{{reverseMessage.title}}</span>
         <hr />
@@ -62,7 +67,8 @@
                 title: 'a title ' + new Date().toLocaleString(),
                 body: 'a body'
             },
-            items: [{ text: "text 1", id: 0 }, { text: "text 2", id: 1 }]   
+            items: [{ text: "text 1", id: 0 }, { text: "text 2", id: 1 }],
+            counter: 0   
         };
         var app = new Vue({
             data: data,
@@ -111,6 +117,17 @@
                         .catch(function (error){
                             vm.answer = 'Error: ' + error
                         });
+                },
+                counterAdd: function(event){
+                    console.log(event);
+                    this.counter +=1;
+                },
+                inlineCall: function(text){
+                    alert(text);
+                },
+                inlineCallEvent: function(text, event){
+                    console.log(event);
+                    alert(text);
                 }
             },
             beforeCreate: function () {
