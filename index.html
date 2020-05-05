@@ -14,10 +14,19 @@
         <hr />
         {{message.body.split('').reverse().join('') }}
         <hr />
-        <span v-if="seen">visible</span><br />
+        <span v-if="seen">visible</span>
+        <span v-else>not visible</span><br />
         <ol>
             <todo-item v-for="item in items" v-bind:todo="item" v-bind:key="item.id"></todo-item>
         </ol>
+        <ol>
+            <li v-for="(item, index) of items" v-bind:id="item.id" v-bind:key="item.id">{{index}}
+                Properties: <i v-for="(value,name,indexp) of item">{{index}} - {{indexp}} - {{name}}:{{value}} </i>
+            </li>
+        </ol>
+        <ul>
+            <li v-for="item in items" v-bind:id="item.id">{{answer}} - {{item.text}}</li>
+        </ul>
         <input v-model="message.body" />
         <button v-on:click="reverse">Reverse</button>
         <button v-on:click="addTodo">Add</button>
@@ -53,7 +62,7 @@
                 title: 'a title ' + new Date().toLocaleString(),
                 body: 'a body'
             },
-            items: [{ text: "text 1", id: 0 }, { text: "text 2", id: 1 }]
+            items: [{ text: "text 1", id: 0 }, { text: "text 2", id: 1 }]   
         };
         var app = new Vue({
             data: data,
@@ -75,7 +84,8 @@
                     set: function (title) {
                         this.message.title = title.split('').reverse().join('');
                     }
-                }
+                },
+                
             },
             methods: {
                 reverse: function () {
