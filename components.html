@@ -20,8 +20,14 @@
         <labeled-input value="10" id="0" label="yei"></labeled-input>
         <labeled-input v-model="input" id="01" label="asd"></labeled-input>
         <labeled-input v-bind:value="input" id="qwe" label="qwe" v-on:input="onInput"></labeled-input>
+        <alert-box>something awful!</alert-box>
     </div>
     <script>
+        Vue.component('alert-box',{
+            template: `
+                <div><strong>Alert:</strong> <slot></slot></div>
+            `
+        });
         Vue.component('labeled-input',{
             props: ['value','id','label'],
             template: `
