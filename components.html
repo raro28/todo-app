@@ -18,7 +18,8 @@
         </div>
         <labeled-input value="initial value" id="an-id" label="The label"></labeled-input>
         <labeled-input value="10" id="0" label="yei"></labeled-input>
-        <labeled-input value="0" id="01" label="asd" v-on:input="onInput"></labeled-input>
+        <labeled-input v-model="input" id="01" label="asd"></labeled-input>
+        <labeled-input v-bind:value="input" id="qwe" label="qwe" v-on:input="onInput"></labeled-input>
     </div>
     <script>
         Vue.component('labeled-input',{
@@ -33,6 +34,7 @@
                     v-bind:value="value"
                     v-on:input="$emit('input',$event.target.value)"
                     ></input>
+                <input type="text" v-on:input="$emit('input',$event.target.value)" v-bind:value="value"></input>
             </div>`
         });
         Vue.component('p-container', {
@@ -60,6 +62,7 @@
 
         var app = new Vue({
             data: {
+                input: "value",
                 postSize: 1,
                 posts: [{ id: 0, title: "title 1", body: "body 1" }, { id: 1, title: "title 2", body: "body 2" }]
             },
@@ -68,7 +71,7 @@
                     this.postSize += amount;
                 },
                 onInput: function(text){
-                    alert(text);
+                    this.input = text;
                 }
             }
         }).$mount('#components');
