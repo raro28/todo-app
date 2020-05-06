@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>components</title>
+    <meta charset="utf-8" />
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <div id="components">
+        <button-counter></button-counter>
+        <button-counter></button-counter>
+        <p-container></p-container>
+
+        <blog-post v-for="post in posts" v-bind:key="post.id" v-bind:post="post"></blog-post>
+    </div>
+    <script>
+        Vue.component('p-container', {
+            template: '<p>Click <button-counter></button-counter> to increase counter</p>'
+        });
+        Vue.component('button-counter',{
+            data: function(){
+                return {
+                    counter: 0
+                }
+            },
+            template: '<button v-on:click="counter++"> {{counter}} </button>'
+        });
+        Vue.component('blog-post',{
+            props: ['post'],
+            template: `
+                <div>
+                    <h1>{{post.title}}</h1><hr/>
+                    <p>{{post.body}}</p><hr/>
+                    <p-container></p-container>
+                </div>
+                `
+        });
+
+        var app = new Vue({
+            data:{
+                posts: [{id:0, title:"title 1", body:"body 1"}, {id:1, title:"title 2", body:"body 2"}]
+            }
+        }).$mount('#components');
+    </script>
+</body>
+
+</html>
