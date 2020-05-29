@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"/>
+
+    <title>Note Detail</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Note {{note.id}}</h1>
+        <a href="/app/lists_index.html">lists/</a>
+        <a href="/app/task_detail.html">tasks/{{note.task.id}}</a>
+        <br>
+        <textarea rows="4" v-model.lazy="note.note"></textarea>
+        <button class="fas fa-edit"></button>
+        <br>
+        <button class="fas fa-trash"></button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+    <script>
+        var app = new Vue({
+            data: {
+                note: {
+                    id:0,
+                    note: "note",
+                    task: {id:0}
+                }
+            },
+            computed: {},
+            watch:{},
+            methods:{},
+            beforeCreate: function(){},
+            create: function(){},
+            beforeMount: function(){},
+            mount: function(){},
+            beforeUpdate: function(){},
+            updated: function(){},
+            destroyed: function(){}
+        }).$mount('#app');
+    </script>
+</body>
+</html>

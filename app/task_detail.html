@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"/>
+
+    <title>Task Detail</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Task {{task.id}}:{{task.title}}</h1>
+        <a href="/app/lists_index.html">lists/</a>
+        <a href="/app/list_detail.html">lists/{{task.taskList.id}}</a>
+        <hr>
+        <task-note v-for="note in notes" v-bind:key="note.id" v-bind:note="note"></task-note>
+        <hr>
+        <textarea rows="4" v-model="note.note"></textarea>
+        <button class="fas fa-plus-circle" v-on:click="addNote"></button>
+        <hr>
+        <input type="text" placeholder="title" v-model="task.title">
+        <input type="checkbox" v-bind:checked="task.isComplete"> Completed
+        <button class="fas fa-edit"></button>
+        <br>
+        <button class="fas fa-trash"></button>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+    <script>
+        Vue.component('task-note', {
+            props: ['note'],
+            template: `
+                <div>
+                    <a href="/app/note_detail.html" class="fas fa-comments">{{note.id}}/</a><br>
+                    <pre>
+{{note.note}}
+                    </pre>
+                </div>
+            `
+        });
+        var app = new Vue({
+            data: {
+                task: {
+                    id: 0,
+                    title: "task title",
+                    taskList: {
+                        id: 0
+                    },
+                    isComplete: false
+                },
+                note: {
+                    note: ""
+                },
+                notes: []
+            },
+            computed: {},
+            watch:{},
+            methods:{
+                addNote: function() {
+                    this.notes.push({
+                        id: this.notes.length,
+                        note: this.note.note
+                    });
+
+                    this.note.note = "";
+                }
+            },
+            beforeCreate: function(){},
+            created: function(){},
+            beforeMount: function(){},
+            mounted: function(){},
+            beforeUpdate: function() {},
+            updated: function(){},
+            destroyed: function(){}
+        }).$mount('#app');
+    </script>
+</body>
+</html>

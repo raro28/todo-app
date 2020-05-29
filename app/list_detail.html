@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"/>
+
+    <title>List Detail</title>
+</head>
+<body>
+    <div id="app">
+        <h1>List {{list.id}}:{{list.title}}</h1>
+        <a href="/app/lists_index.html">lists/</a>
+        <todo-list v-bind:tasks="tasks" v-on:remove-task="removeTask" v-on:toggle-status="toggleStatus"></todo-list>
+        <hr>
+        <input type="text" placeholder="title" v-model:value="task.title">
+        <button class="fas fa-plus-circle" v-on:click="addTask"></button>
+        <hr>
+        <input type="text" placeholder="title" v-model:value="list.title">
+        <button class="fas fa-edit"></button>
+        <br>
+        <button class="fas fa-trash"></button>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+<script>
+    Vue.component('todo-list',{
+        props: ['tasks'],
+        template: `
+            <ul>
+                <li v-for="task in tasks" v-bind:key="task.id">
+                    <a href="/app/task_detail.html"><i class="fas fa-thumbtack">{{task.id}}</i></a>
+                     {{task.title}}
+                    <button v-bind:class="[{'fa-check':task.isComplete, 'fa-spinner':!task.isComplete}, 'fas']" v-on:click="$emit('toggle-status', task.id)"></button>
+                    <button class="fas fa-trash" v-on:click="$emit('remove-task', task.id)"></button>
+                </li>
+            </ul>
+            `
+    });
+    var app = new Vue({
+        data:{
+            task:{
+                title:"",
+                isComplete: false
+            },
+            list: {
+                id: 0,
+                title: "title"
+            },
+            tasks:[]
+        },
+        computed:{},
+        watch:{},
+        methods:{
+            addTask: function(){
+                this.tasks.push({
+                    id: this.tasks.length,
+                    title: this.task.title,
+                    isComplete: this.task.isComplete
+                });
+
+                this.task.title = "";
+            },
+            removeTask: function(id){
+                this.tasks = this.tasks.filter(task => task.id != id);
+            },
+            toggleStatus: function(id){
+                var task = this.tasks.filter(task => task.id == id)[0];
+                task.isComplete = !task.isComplete;
+            }
+        },
+        beforeCreate: function(){},
+        created: function(){},
+        beforeMount: function(){},
+        mounted: function(){},
+        beforeUpdate: function(){},
+        updated: function(){},
+        destroyed: function(){}
+    }).$mount('#app');
+</script>
+</html>

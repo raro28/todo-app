@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"/>
+
+    <title>Lists</title>
+</head>
+<body>
+    <div id="app">
+        <h1>Lists</h1>
+        <todo-lists v-bind:lists="lists" v-on:remove-list="removeList"></todo-lists>
+        <input type="text" placeholder="title" v-model:value = "list.title">
+        <button class="fas fa-plus-circle" v-on:click="addList"></button>
+    </div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
+<script>
+    Vue.component('todo-lists', {
+        props:['lists'],
+        template: `
+            <ul>
+                <li v-for="list in lists" v-bind:key="list.id">
+                    <a href="/app/list_detail.html">{{list.title}}</a>
+                    <button class="fas fa-trash" v-on:click="$emit('remove-list', list.id)"></button>
+                </li>
+            </ul>
+            `
+    });
+    var app = new Vue({
+        data: {
+            id: 0,
+            list: {
+                title: ""
+            },
+            lists: []
+        },
+        computed: {},
+        watch:{},
+        methods: {
+            addList: function name() {
+                this.lists.push({
+                    id: this.lists.length,
+                    title:this.list.title
+                    });
+                this.list.title = "";
+            },
+            removeList: function(id){
+                this.lists = this.lists.filter(list => list.id != id);
+            }
+        },
+        beforeCreate: function (){},
+        created: function (){},
+        befoureMount: function (){},
+        mounted: function(){},
+        beforeUpdate: function(){},
+        updated: function(){},
+        destroyed: function(){}
+
+    }).$mount('#app');
+</script>
+</html>
