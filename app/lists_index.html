@@ -16,6 +16,7 @@
         <button class="fas fa-plus-circle" v-on:click="addList"></button>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
 <script>
     Vue.component('todo-lists', {
@@ -23,7 +24,7 @@
         template: `
             <ul>
                 <li v-for="list in lists" v-bind:key="list.id">
-                    <a href="/app/list_detail.html">{{list.title}}</a>
+                    <a v-bind:href="'/app/list_detail.html?id=' + list.id">{{list.title}}</a>
                     <button class="fas fa-trash" v-on:click="$emit('remove-list', list.id)"></button>
                 </li>
             </ul>
@@ -31,7 +32,7 @@
     });
     var app = new Vue({
         data: {
-            id: 0,
+            apiUrl: 'http://localhost:8080',
             list: {
                 title: ""
             },
@@ -41,20 +42,33 @@
         watch:{},
         methods: {
             addList: function name() {
-                this.lists.push({
-                    id: this.lists.length,
-                    title:this.list.title
+                axios
+                    .post(this.apiUrl + '/lists/', this.list)
+                    .then(response=> {
+                        this.lists.push({
+                            id: response.data.id,
+                            title: this.list.title});
+
+                        this.list.title = "";
                     });
-                this.list.title = "";
             },
             removeList: function(id){
-                this.lists = this.lists.filter(list => list.id != id);
+                axios
+                    .delete(this.apiUrl + '/lists/' + id)
+                    .then(()=> this.lists = this.lists.filter(list => list.id != id));
+            },
+            refreshList: function(){
+                axios
+                    .get(this.apiUrl + '/lists')
+                    .then(json => this.lists = json.data.data);
             }
         },
         beforeCreate: function (){},
         created: function (){},
         befoureMount: function (){},
-        mounted: function(){},
+        mounted: function(){
+            this.refreshList();
+        },
         beforeUpdate: function(){},
         updated: function(){},
         destroyed: function(){}

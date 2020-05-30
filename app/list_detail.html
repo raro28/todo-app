@@ -18,11 +18,10 @@
         <button class="fas fa-plus-circle" v-on:click="addTask"></button>
         <hr>
         <input type="text" placeholder="title" v-model:value="list.title">
-        <button class="fas fa-edit"></button>
-        <br>
-        <button class="fas fa-trash"></button>
+        <button class="fas fa-edit" v-on:click="editList"></button>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
 <script>
     Vue.component('todo-list',{
@@ -30,9 +29,9 @@
         template: `
             <ul>
                 <li v-for="task in tasks" v-bind:key="task.id">
-                    <a href="/app/task_detail.html"><i class="fas fa-thumbtack">{{task.id}}</i></a>
+                    <a v-bind:href="'/app/task_detail.html?id=' + task.id"><i class="fas fa-thumbtack">{{task.id}}</i></a>
                      {{task.title}}
-                    <button v-bind:class="[{'fa-check':task.isComplete, 'fa-spinner':!task.isComplete}, 'fas']" v-on:click="$emit('toggle-status', task.id)"></button>
+                    <button v-bind:class="[{'fa-check':task.isCompleted, 'fa-spinner':!task.isCompleted}, 'fas']" v-on:click="$emit('toggle-status', task.id)"></button>
                     <button class="fas fa-trash" v-on:click="$emit('remove-task', task.id)"></button>
                 </li>
             </ul>
@@ -40,9 +39,10 @@
     });
     var app = new Vue({
         data:{
+            apiUrl: 'http://localhost:8080',
             task:{
                 title:"",
-                isComplete: false
+                isCompleted: false
             },
             list: {
                 id: 0,
@@ -54,26 +54,50 @@
         watch:{},
         methods:{
             addTask: function(){
-                this.tasks.push({
-                    id: this.tasks.length,
-                    title: this.task.title,
-                    isComplete: this.task.isComplete
-                });
+                axios
+                    .post(this.apiUrl + '/lists/' + this.list.id + '/tasks', this.task)
+                    .then(response => {
+                        this.tasks.push({
+                            id: response.data.id,
+                            title: this.task.title});
 
-                this.task.title = "";
+                        this.task.title = "";
+                    });
             },
             removeTask: function(id){
-                this.tasks = this.tasks.filter(task => task.id != id);
+                axios
+                    .delete(this.apiUrl + '/tasks/' + id)
+                    .then(()=> this.tasks = this.tasks.filter(task => task.id != id));
             },
             toggleStatus: function(id){
                 var task = this.tasks.filter(task => task.id == id)[0];
-                task.isComplete = !task.isComplete;
+                task.isCompleted = !task.isCompleted;
+                axios.put(this.apiUrl + '/tasks/' + id, task);
+            },
+            refreshTasks: function(){
+                axios
+                    .get(this.apiUrl + '/lists/' + this.list.id + '/tasks')
+                    .then(response=> this.tasks = response.data.data);
+            },
+            editList: function(){
+                axios
+                    .put(this.apiUrl + '/lists/' + this.list.id, this.list);
             }
         },
         beforeCreate: function(){},
         created: function(){},
         beforeMount: function(){},
-        mounted: function(){},
+        mounted: function(){
+            var id = parseInt(new URL(window.location).searchParams.get('id'));
+
+            axios
+                .get(this.apiUrl + '/lists/' + id)
+                .then(response=> this.list = response.data)
+                .then(()=> {
+                    this.list.id = id;
+                    this.refreshTasks();
+                });
+        },
         beforeUpdate: function(){},
         updated: function(){},
         destroyed: function(){}

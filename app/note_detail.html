@@ -12,30 +12,42 @@
     <div id="app">
         <h1>Note {{note.id}}</h1>
         <a href="/app/lists_index.html">lists/</a>
-        <a href="/app/task_detail.html">tasks/{{note.task.id}}</a>
         <br>
-        <textarea rows="4" v-model.lazy="note.note"></textarea>
-        <button class="fas fa-edit"></button>
-        <br>
-        <button class="fas fa-trash"></button>
+        <textarea rows="4" v-model.lazy="note.content"></textarea>
+        <button class="fas fa-edit" v-on:click="editNote"></button>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js"></script>
     <script>
         var app = new Vue({
             data: {
+                apiUrl: 'http://localhost:8080',
                 note: {
-                    id:0,
-                    note: "note",
-                    task: {id:0}
+                    id: -1,
+                    content: ""
                 }
             },
             computed: {},
             watch:{},
-            methods:{},
+            methods:{
+                editNote: function (){
+                    axios
+                        .put(this.apiUrl + '/notes/' + this.note.id, this.note);
+                }
+            },
             beforeCreate: function(){},
             create: function(){},
             beforeMount: function(){},
-            mount: function(){},
+            mounted: function(){
+                var id = parseInt(new URL(window.location).searchParams.get('id'));
+
+                axios
+                    .get(this.apiUrl + '/notes/' + id)
+                    .then(response=> {
+                        this.note = response.data;
+                        this.note.id = id;
+                    });
+            },
             beforeUpdate: function(){},
             updated: function(){},
             destroyed: function(){}
