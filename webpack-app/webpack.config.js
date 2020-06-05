@@ -1,9 +1,52 @@
-const path = require('path');
+const HTMLWebpackPlugin = require('html-webpack-plugin');
+const { join } = require('path');
+const { VueLoaderPlugin } = require('vue-loader');
+const { HotModuleReplacementPlugin } = require('webpack');
 
 module.exports = {
-    entry: './src/index.js',
+    mode: 'development',
+    entry: join(__dirname, 'app.js'),
     output: {
-        filename: 'main.js',
-        path: path.resolve(__dirname, 'dist')
-    }
+        filename: 'app.bundled.js',
+        path: join(__dirname, 'build')
+    },
+    devServer:{
+        port: 8080,
+        hot: true,
+        open: true,
+        historyApiFallback: true
+    },
+    module:{
+        rules: [
+            {
+                test: /\.js$/,
+                loader: 'babel-loader',
+                options: {
+                    presets: ['@babel/preset-env']
+                }
+            },
+            {
+                test:/\.vue$/,
+                loader: 'vue-loader'
+            },
+            {
+                test:/\.css$/,
+                use: [
+                    'vue-style-loader',
+                    'css-loader'
+                ]
+            }
+        ]
+    },
+    plugins: [
+        new HotModuleReplacementPlugin(),
+        new VueLoaderPlugin(),
+        new HTMLWebpackPlugin({
+            showErrors: true,
+            cache: true,
+            title: 'Vue with webpack',
+            //favicon: join(__dirname, 'logo.png'),
+            template: join(__dirname, 'index.html')
+        })
+    ]
 };
