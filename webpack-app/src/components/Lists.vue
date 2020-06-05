@@ -1,7 +1,7 @@
 <template>
   <ul>
     <li v-for="list in lists" v-bind:key="list.id">
-      <a v-bind:href="'/app/list_detail.html?id=' + list.id">{{list.title}}</a>
+      <router-link :to="'/lists/'+list.id">{{list.title}}</router-link>
       <button class="fas fa-trash" v-on:click="$emit('remove-list', list.id)"></button>
     </li>
   </ul>
@@ -10,6 +10,6 @@
 <script>
 export default {
   name: "lists",
-  props: ['lists']
+  props: ["lists"]
 };
 </script>
