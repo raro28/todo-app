@@ -1,7 +1,10 @@
 <template>
   <div>
     <h1>Note {{note.id}}</h1>
+    <router-link to="/lists">/lists</router-link>
+    <br>
     <textarea rows="4" v-model.lazy="note.content"></textarea>
+    <button><font-awesome-icon icon="edit"></font-awesome-icon></button>
   </div>
 </template>
 

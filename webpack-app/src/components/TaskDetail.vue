@@ -1,7 +1,16 @@
 <template>
   <div>
     <h1>Task {{task.id}}:{{task.title}}</h1>
+    <router-link to="/lists">/lists</router-link>
+    <hr>
     <note v-for="note in notes" v-bind:key="note.id" v-bind:note="note"></note>
+    <hr>
+    <textarea rows="4" v-model="note.content"></textarea>
+    <button><font-awesome-icon icon="plus-circle"></font-awesome-icon></button>
+    <hr>
+    <input type="text" placeholder="title" v-model="task.title">
+    <input type="checkbox" v-model:checked="task.isCompleted"> Completed
+    <button><font-awesome-icon icon="edit"></font-awesome-icon></button>
   </div>
 </template>
 

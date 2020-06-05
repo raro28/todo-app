@@ -1,7 +1,14 @@
 <template>
   <div>
     <h1>List {{list.id}}:{{list.title}}</h1>
+    <router-link to="/lists">/lists</router-link>
     <todo-list v-bind:tasks="tasks"></todo-list>
+    <hr>
+    <input type="text" placeholder="title" v-model:value="task.title">
+    <button><font-awesome-icon icon="plus-circle"></font-awesome-icon></button>
+    <hr>
+    <input type="text" placeholder="title" v-model:value="list.title">
+    <button><font-awesome-icon icon="edit"></font-awesome-icon></button>
   </div>
 </template>
 

@@ -1,7 +1,9 @@
 <template>
   <div>
-    <h1>Home</h1>
+    <h1>Lists</h1>
     <lists v-bind:lists="lists"></lists>
+    <input type="text" placeholder="title" v-model:value = "list.title">
+    <button><font-awesome-icon icon="plus-circle"></font-awesome-icon></button>
   </div>
 </template>
 
