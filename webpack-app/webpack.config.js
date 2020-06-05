@@ -12,7 +12,7 @@ module.exports = {
         path: join(__dirname, 'build')
     },
     devServer:{
-        port: 8080,
+        port: 9090,
         hot: true,
         open: true,
         historyApiFallback: true
