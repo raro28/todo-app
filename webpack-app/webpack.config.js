@@ -9,7 +9,8 @@ module.exports = {
     entry: join(__dirname, './src/app.js'),
     output: {
         filename: 'app.bundled.js',
-        path: join(__dirname, 'build')
+        path: join(__dirname, 'build'),
+        publicPath: '/'
     },
     devServer:{
         port: 9090,
