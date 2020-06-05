@@ -1,3 +1,4 @@
+//https://dev.to/macmacky/how-to-configure-webpack-and-vue-from-the-ground-up-4c19
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { join } = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
@@ -5,7 +6,7 @@ const { HotModuleReplacementPlugin } = require('webpack');
 
 module.exports = {
     mode: 'development',
-    entry: join(__dirname, 'app.js'),
+    entry: join(__dirname, './src/app.js'),
     output: {
         filename: 'app.bundled.js',
         path: join(__dirname, 'build')
@@ -46,7 +47,7 @@ module.exports = {
             cache: true,
             title: 'Vue with webpack',
             //favicon: join(__dirname, 'logo.png'),
-            template: join(__dirname, 'index.html')
+            template: join(__dirname, './src/index.html')
         })
     ]
 };
