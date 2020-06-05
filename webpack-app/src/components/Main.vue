@@ -1,5 +1,11 @@
+<!-- https://dev.to/macmacky/how-to-configure-webpack-and-vue-from-the-ground-up-4c19 -->
 <template>
-    <h1>Vue</h1>
+    <div>
+        <router-link to="/">Home</router-link>
+        <router-link to="/contact">Contact</router-link>
+        <router-link to="/about">About</router-link>
+        <router-view></router-view>
+    </div>
 </template>
 
 <script>
