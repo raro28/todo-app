@@ -9,8 +9,6 @@
 </template>
 
 <script>
-const axios = require("axios");
-
 export default {
   name: "NoteDetail",
   data: function() {
@@ -26,7 +24,7 @@ export default {
   watch: {},
   methods: {
     editNote: function(){
-      axios
+      this.$axios
         .pust(this.apiUrl + '/notes/' + this.note.id, this.note);
     }
   },
@@ -34,7 +32,7 @@ export default {
   created: function(){},
   beforeMount: function(){},
   mounted: function() {
-    axios
+    this.$axios
       .get(this.apiUrl + "/notes/" + this.$route.params.id)
       .then(response => {
         this.note = response.data;

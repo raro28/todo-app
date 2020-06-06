@@ -18,7 +18,6 @@
 </template>
 
 <script>
-const axios = require("axios");
 import Vue from "vue";
 
 Vue.component("todo-list", {
@@ -58,12 +57,12 @@ export default {
   watch: {},
   methods: {
     refreshTasks: function() {
-      axios
+      this.$axios
         .get(this.apiUrl + "/lists/" + this.list.id + "/tasks")
         .then(response => (this.tasks = response.data.data));
     },
     addTask: function(){
-      axios
+      this.$axios
         .post(this.apiUrl + '/lists/' + this.list.id + '/tasks', this.task)
         .then(response => {
           this.tasks.push({
@@ -77,15 +76,15 @@ export default {
         });
     },
     editList: function(){
-      axios.put(this.apiUrl + '/lists/' + this.list.id, this.list);
+      this.$axios.put(this.apiUrl + '/lists/' + this.list.id, this.list);
     },
     toggleStatus: function(id){
       let task = this.tasks.filter(task => task.id == id)[0];
       task.isCompleted = !task.isCompleted;
-      axios.put(this.apiUrl + '/tasks/' + id, task);
+      this.$axios.put(this.apiUrl + '/tasks/' + id, task);
     },
     removeTask: function(id){
-      axios
+      this.$axios
         .delete(this.apiUrl + '/tasks/' + id)
         .then(() => this.tasks = this.tasks.filter(task => task.id != id));
     }
@@ -94,7 +93,7 @@ export default {
   created: function() {},
   beforeMounted: function() {},
   mounted: function() {
-    axios
+    this.$axios
       .get(this.apiUrl + "/lists/" + this.$route.params.id)
       .then(response => (this.list = response.data))
       .then(() => {

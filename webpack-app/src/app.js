@@ -10,6 +10,10 @@ import {faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 import {faEdit} from '@fortawesome/free-solid-svg-icons';
 import {faComments} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
+import Axios from 'axios';
+
+//https://stackoverflow.com/questions/48650107/use-axios-globally-in-all-my-components-vue
+Vue.prototype.$axios = Axios;
 
 library.add(
     faTrash,

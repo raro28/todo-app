@@ -19,7 +19,6 @@
 </template>
 
 <script>
-const axios = require("axios");
 import Vue from "vue";
 
 Vue.component("task-note", {
@@ -57,12 +56,12 @@ export default {
   watch: {},
   methods: {
     refreshNotes: function() {
-      axios
+      this.$axios
         .get(this.apiUrl + "/tasks/" + this.task.id + "/notes")
         .then(response => (this.notes = response.data.data));
     },
     addNote: function(){
-      axios.post(this.apiUrl + "/tasks/" + this.task.id + '/notes', this.note)
+      this.$axios.post(this.apiUrl + "/tasks/" + this.task.id + '/notes', this.note)
       .then(response => {
         this.notes.push({
           id: response.data.id,
@@ -73,10 +72,10 @@ export default {
       });
     },
     editTask: function(){
-      axios.put(this.apiUrl + '/tasks/' + this.task.id, this.task);
+      this.$axios.put(this.apiUrl + '/tasks/' + this.task.id, this.task);
     },
     removeNote: function(id){
-      axios
+      this.$axios
         .delete(this.apiUrl + '/notes/' + id)
         .then(()=> this.notes = this.notes.filter(note => note.id != id));
     }
@@ -85,7 +84,7 @@ export default {
   create: function(){},
   beforeMount: function(){},
   mounted: function() {
-    axios
+    this.$axios
       .get(this.apiUrl + "/tasks/" + this.$route.params.id)
       .then(response => (this.task = response.data))
       .then(() => {
