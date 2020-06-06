@@ -22,7 +22,12 @@ export default {
       }
     };
   },
+  computed: {},
+  watch: {},
   methods: {},
+  beforeCreate: function(){},
+  created: function(){},
+  beforeMount: function(){},
   mounted: function() {
     axios
       .get(this.apiUrl + "/notes/" + this.$route.params.id)
@@ -30,6 +35,9 @@ export default {
         this.note = response.data;
         this.note.id = this.$route.params.id;
       });
-  }
+  },
+  beforeUpdate: function(){},
+  updated: function(){},
+  destroyed: function(){}
 };
 </script>

@@ -40,6 +40,10 @@ module.exports = {
             }
         ]
     },
+//https://github.com/vuejs/vue-cli/issues/2754#issuecomment-493290698
+    resolve: {
+        alias: { vue: 'vue/dist/vue.esm.js'}
+    },
     plugins: [
         new HotModuleReplacementPlugin(),
         new VueLoaderPlugin(),
