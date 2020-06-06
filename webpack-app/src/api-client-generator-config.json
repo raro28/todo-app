@@ -1,0 +1,4 @@
+{
+  "emitJSDoc": true,
+  "usePromises": true
+}

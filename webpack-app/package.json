@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "webpack-dev-server",
-    "build": "webpack"
+    "build": "webpack",
+    "build-api-client": "rm -rf generated-sources/src/openapi && openapi-generator generate -i docs/todo-api-spec/api.spec.yaml -g javascript -o generated-sources/src/openapi -c src/api-client-generator-config.json && npm link generated-sources/src/openapi && cd generated-sources/src/openapi && npm install && npm run build"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
     "@babel/cli": "^7.10.1",
     "@babel/core": "^7.10.2",
     "@babel/preset-env": "^7.10.2",
+    "@openapitools/openapi-generator-cli": "^1.0.13-4.3.1",
     "axios": "^0.19.2",
     "babel-loader": "^8.1.0",
     "css-loader": "^3.5.3",
