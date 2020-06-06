@@ -20,7 +20,7 @@
 <script>
 import Vue from "vue";
 
-Vue.component("todo-list", {
+const todoList = {
   props: ['tasks'],
   template: `
     <ul>
@@ -34,11 +34,13 @@ Vue.component("todo-list", {
       </li>
     </ul>
     `
-});
+};
 
 export default {
   name: "ListDetail",
-  components: {},
+  components: {
+    todoList
+  },
   data: function() {
     return {
       task: {

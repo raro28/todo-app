@@ -21,7 +21,7 @@
 <script>
 import Vue from "vue";
 
-Vue.component("task-note", {
+const taskNote= {
   props: ["note"],
   template: `
     <div>
@@ -33,11 +33,13 @@ Vue.component("task-note", {
       </pre>
     </div>
   `
-});
+};
 
 export default {
   name: "TaskDetail",
-  components: {},
+  components: {
+    taskNote
+  },
   data: function() {
     return {
       task: {
