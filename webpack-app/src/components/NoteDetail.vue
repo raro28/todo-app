@@ -4,7 +4,7 @@
     <router-link to="/lists">/lists</router-link>
     <br>
     <textarea rows="4" v-model.lazy="note.content"></textarea>
-    <button><font-awesome-icon icon="edit"></font-awesome-icon></button>
+    <button v-on:click = "editNote"><font-awesome-icon icon="edit"></font-awesome-icon></button>
   </div>
 </template>
 
@@ -24,7 +24,12 @@ export default {
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    editNote: function(){
+      axios
+        .pust(this.apiUrl + '/notes/' + this.note.id, this.note);
+    }
+  },
   beforeCreate: function(){},
   created: function(){},
   beforeMount: function(){},

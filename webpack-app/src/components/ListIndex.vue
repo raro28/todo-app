@@ -3,7 +3,7 @@
     <h1>Lists</h1>
     <todo-lists v-bind:lists="lists"></todo-lists>
     <input type="text" placeholder="title" v-model:value="list.title" />
-    <button>
+    <button v-on:click="addList">
       <font-awesome-icon icon="plus-circle"></font-awesome-icon>
     </button>
   </div>
@@ -46,6 +46,18 @@ export default {
       axios
         .get(this.apiUrl + "/lists")
         .then(json => (this.lists = json.data.data));
+    },
+    addList: function(){
+      axios
+        .post(this.apiUrl + '/lists/', this.list)
+        .then(response => {
+          this.lists.push({
+            id: response.data.id,
+            title: this.list.title
+          });
+
+          this.list.title = "";
+        });
     }
   },
   beforeCreate: function() {},

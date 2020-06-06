@@ -2,15 +2,16 @@
   <div>
     <h1>List {{list.id}}:{{list.title}}</h1>
     <router-link to="/lists">/lists</router-link>
-    <todo-list v-bind:tasks="tasks"></todo-list>
+    <todo-list v-bind:tasks="tasks" v-on:toggle-status="toggleStatus" v-on:remove-task="removeTask"></todo-list>
     <hr />
     <input type="text" placeholder="title" v-model:value="task.title" />
-    <button>
+    <input type="checkbox" v-model:checked="task.isCompleted"> Completed
+    <button v-on:click="addTask">
       <font-awesome-icon icon="plus-circle"></font-awesome-icon>
     </button>
     <hr />
     <input type="text" placeholder="title" v-model:value="list.title" />
-    <button>
+    <button v-on:click="editList">
       <font-awesome-icon icon="edit"></font-awesome-icon>
     </button>
   </div>
@@ -29,8 +30,8 @@ Vue.component("todo-list", {
           <font-awesome-icon icon="thumbtack"></font-awesome-icon>{{task.id}}
         </router-link> 
         {{task.title}}
-        <button><font-awesome-icon :icon="task.isCompleted ? 'check' : 'spinner'"></font-awesome-icon></button>
-        <button><font-awesome-icon icon='trash'></font-awesome-icon></button>
+        <button v-on:click="$emit('toggle-status', task.id)"><font-awesome-icon :icon="task.isCompleted ? 'check' : 'spinner'"></font-awesome-icon></button>
+        <button v-on:click="$emit('remove-task', task.id)"><font-awesome-icon icon='trash'></font-awesome-icon></button>
       </li>
     </ul>
     `
@@ -60,6 +61,33 @@ export default {
       axios
         .get(this.apiUrl + "/lists/" + this.list.id + "/tasks")
         .then(response => (this.tasks = response.data.data));
+    },
+    addTask: function(){
+      axios
+        .post(this.apiUrl + '/lists/' + this.list.id + '/tasks', this.task)
+        .then(response => {
+          this.tasks.push({
+            id: response.data.id,
+            title: this.task.title,
+            isCompleted: this.task.isCompleted
+          });
+
+          this.task.title = "";
+          this.task.isCompleted = false;
+        });
+    },
+    editList: function(){
+      axios.put(this.apiUrl + '/lists/' + this.list.id, this.list);
+    },
+    toggleStatus: function(id){
+      let task = this.tasks.filter(task => task.id == id)[0];
+      task.isCompleted = !task.isCompleted;
+      axios.put(this.apiUrl + '/tasks/' + id, task);
+    },
+    removeTask: function(id){
+      axios
+        .delete(this.apiUrl + '/tasks/' + id)
+        .then(() => this.tasks = this.tasks.filter(task => task.id != id));
     }
   },
   beforeCreate: function() {},
