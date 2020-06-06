@@ -41,7 +41,6 @@ export default {
   components: {},
   data: function() {
     return {
-      apiUrl: "http://localhost:8080",
       task: {
         title: "",
         isCompleted: false
@@ -57,45 +56,57 @@ export default {
   watch: {},
   methods: {
     refreshTasks: function() {
-      this.$axios
-        .get(this.apiUrl + "/lists/" + this.list.id + "/tasks")
-        .then(response => (this.tasks = response.data.data));
+      this.$todoApi.listsIdTasksGet(this.list.id, {page:1, size: 5})
+        .then(
+          response => this.tasks = response.data,
+          error => console.error(error)
+        );
     },
     addTask: function(){
-      this.$axios
-        .post(this.apiUrl + '/lists/' + this.list.id + '/tasks', this.task)
-        .then(response => {
-          this.tasks.push({
-            id: response.data.id,
-            title: this.task.title,
-            isCompleted: this.task.isCompleted
-          });
+      this.$todoApi.listsIdTasksPost(this.list.id, this.task)
+        .then(
+          response => {
+            this.tasks.push({
+              id: response.id,
+              title: this.task.title,
+              isCompleted: this.task.isCompleted
+            });
 
-          this.task.title = "";
-          this.task.isCompleted = false;
-        });
+            this.task.title = "";
+            this.task.isCompleted = false;
+          },
+          error => console.error(error)
+        );
     },
     editList: function(){
-      this.$axios.put(this.apiUrl + '/lists/' + this.list.id, this.list);
+      this.$todoApi.listsIdPut(this.list.id, this.list)
+        .then(
+          response => {},
+          error => console.error(error)
+        );
     },
     toggleStatus: function(id){
       let task = this.tasks.filter(task => task.id == id)[0];
       task.isCompleted = !task.isCompleted;
-      this.$axios.put(this.apiUrl + '/tasks/' + id, task);
+
+      this.$todoApi.tasksIdPut(id, task);
     },
     removeTask: function(id){
-      this.$axios
-        .delete(this.apiUrl + '/tasks/' + id)
-        .then(() => this.tasks = this.tasks.filter(task => task.id != id));
+      this.$todoApi.tasksIdDelete(id)
+        .then(
+          ()=> this.tasks = this.tasks.filter(task => task.id != id),
+          error => console.error(error));
     }
   },
   beforeCreate: function() {},
   created: function() {},
   beforeMounted: function() {},
   mounted: function() {
-    this.$axios
-      .get(this.apiUrl + "/lists/" + this.$route.params.id)
-      .then(response => (this.list = response.data))
+    this.$todoApi.listsIdGet(this.$route.params.id)
+      .then(
+        response => this.list = response,
+        error => console.error(error)
+      )
       .then(() => {
         this.list.id = this.$route.params.id;
         this.refreshTasks();

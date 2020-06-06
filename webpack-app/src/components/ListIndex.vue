@@ -31,7 +31,6 @@ export default {
   components: {},
   data: function() {
     return {
-      apiUrl: "http://localhost:8080",
       list: {
         title: ""
       },
@@ -42,26 +41,32 @@ export default {
   watch: {},
   methods: {
     refreshList: function() {
-      this.$axios
-        .get(this.apiUrl + "/lists")
-        .then(json => (this.lists = json.data.data));
+      this.$todoApi.listsGet({page:1, size: 5})
+        .then(
+          response => this.lists = response.data,
+          error => console.error(error)
+        );
     },
     addList: function(){
-      this.$axios
-        .post(this.apiUrl + '/lists/', this.list)
-        .then(response => {
-          this.lists.push({
-            id: response.data.id,
-            title: this.list.title
-          });
+      this.$todoApi.listsPost(this.list)
+        .then(
+          response => {
+            this.lists.push({
+              id: response.id,
+              title: this.list.title
+            });
 
-          this.list.title = "";
-        });
+            this.list.title = "";
+          },
+          error => console.error(error)
+        );
     },
     removeList: function(id){
-      this.$axios
-        .delete(this.apiUrl + '/lists/' + id)
-        .then(() => this.lists = this.lists.filter(list => list.id != id));
+      this.$todoApi.listsIdDelete(id)
+        .then(
+          () => this.lists = this.lists.filter(list => list.id != id),
+          error => console.error(error)
+        );
     }
   },
   beforeCreate: function() {},

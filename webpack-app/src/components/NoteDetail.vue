@@ -13,7 +13,6 @@ export default {
   name: "NoteDetail",
   data: function() {
     return {
-      apiUrl: "http://localhost:8080",
       note: {
         id: -1,
         content: ""
@@ -24,20 +23,25 @@ export default {
   watch: {},
   methods: {
     editNote: function(){
-      this.$axios
-        .pust(this.apiUrl + '/notes/' + this.note.id, this.note);
+      //TODO: it is super weird that the generated client requires {note: ...}
+      this.$todoApi.notesIdPut(this.note.id, {note: this.note})
+        .then(
+          ()=> {},
+          error => console.error(error)
+        );
     }
   },
   beforeCreate: function(){},
   created: function(){},
   beforeMount: function(){},
   mounted: function() {
-    this.$axios
-      .get(this.apiUrl + "/notes/" + this.$route.params.id)
-      .then(response => {
-        this.note = response.data;
-        this.note.id = this.$route.params.id;
-      });
+    this.$todoApi.notesIdGet(this.$route.params.id)
+      .then(
+        response => {
+          this.note = response;
+          this.note.id = this.$route.params.id;
+        }
+      );
   },
   beforeUpdate: function(){},
   updated: function(){},

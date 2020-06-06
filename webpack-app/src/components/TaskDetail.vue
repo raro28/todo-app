@@ -40,7 +40,6 @@ export default {
   components: {},
   data: function() {
     return {
-      apiUrl: "http://localhost:8080",
       task: {
         id: -1,
         title: "",
@@ -56,37 +55,49 @@ export default {
   watch: {},
   methods: {
     refreshNotes: function() {
-      this.$axios
-        .get(this.apiUrl + "/tasks/" + this.task.id + "/notes")
-        .then(response => (this.notes = response.data.data));
+      this.$todoApi.tasksIdNotesGet(this.task.id)
+        .then(
+          response => this.notes = response.data
+        );
     },
     addNote: function(){
-      this.$axios.post(this.apiUrl + "/tasks/" + this.task.id + '/notes', this.note)
-      .then(response => {
-        this.notes.push({
-          id: response.data.id,
-          content: this.note.content
-        });
+      this.$todoApi.tasksIdNotesPost(this.task.id, this.note)
+        .then(
+          response => {
+            this.notes.push({
+              id: response.id,
+              content: this.note.content
+            });
 
-        this.note.content = "";
-      });
+            this.note.content = "";
+          },
+          error => console.error(error)
+        );
     },
     editTask: function(){
-      this.$axios.put(this.apiUrl + '/tasks/' + this.task.id, this.task);
+      this.$todoApi.tasksIdPut(this.task.id, this.task)
+        .then(
+          ()=>{},
+          error=> console.error(error)
+        );
     },
     removeNote: function(id){
-      this.$axios
-        .delete(this.apiUrl + '/notes/' + id)
-        .then(()=> this.notes = this.notes.filter(note => note.id != id));
+      this.$todoApi.notesIdDelete(id)
+        .then(
+          ()=> this.notes = this.notes.filter(note => note.id != id),
+          error => console.error(error)
+        );
     }
   },
   beforeCreate: function(){},
   create: function(){},
   beforeMount: function(){},
   mounted: function() {
-    this.$axios
-      .get(this.apiUrl + "/tasks/" + this.$route.params.id)
-      .then(response => (this.task = response.data))
+    this.$todoApi.tasksIdGet(this.$route.params.id)
+      .then(
+        response => this.task = response,
+        error => console.error(error)
+      )
       .then(() => {
         this.task.id = this.$route.params.id;
         this.refreshNotes();
