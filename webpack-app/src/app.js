@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Main from './components/Main.vue';
+import errorView from './components/errorView.vue';
 import router from './router';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
@@ -34,6 +35,7 @@ library.add(
     faComments
     );
 Vue.component('font-awesome-icon', FontAwesomeIcon);
+Vue.component('error-view', errorView);
 
 new Vue({
     render: (h) => h(Main),

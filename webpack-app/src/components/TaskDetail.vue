@@ -15,6 +15,7 @@
     <button v-on:click = "editTask">
       <font-awesome-icon icon="edit"></font-awesome-icon>
     </button>
+    <error-view v-bind:errors="errors"></error-view>
   </div>
 </template>
 
@@ -50,7 +51,8 @@ export default {
       note: {
         content: ""
       },
-      notes: []
+      notes: [],
+      errors: []
     };
   },
   computed: {},
@@ -73,21 +75,21 @@ export default {
 
             this.note.content = "";
           },
-          error => console.error(error)
+          error => this.errors.push(error.body)
         );
     },
     editTask: function(){
       this.$todoApi.tasksIdPut(this.task.id, this.$removeId(this.task))
         .then(
           ()=>{},
-          error=> console.error(error)
+          error=> this.errors.push(error.body)
         );
     },
     removeNote: function(id){
       this.$todoApi.notesIdDelete(id)
         .then(
           ()=> this.notes = this.notes.filter(note => note.id != id),
-          error => console.error(error)
+          error => this.errors.push(error.body)
         );
     }
   },
@@ -98,7 +100,7 @@ export default {
     this.$todoApi.tasksIdGet(this.$route.params.id)
       .then(
         response => this.task = response,
-        error => console.error(error)
+        error => this.errors.push(error.body)
       )
       .then(() => {
         this.task.id = this.$route.params.id;

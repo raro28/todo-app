@@ -6,6 +6,7 @@
     <button v-on:click="addList">
       <font-awesome-icon icon="plus-circle"></font-awesome-icon>
     </button>
+    <error-view v-bind:errors="errors"></error-view>
   </div>
 </template>
 
@@ -36,7 +37,8 @@ export default {
       list: {
         title: ""
       },
-      lists: []
+      lists: [],
+      errors: []
     };
   },
   computed: {},
@@ -46,7 +48,7 @@ export default {
       this.$todoApi.listsGet({page:1, size: 5})
         .then(
           response => this.lists = response.data,
-          error => console.error(error)
+          error => this.errors.push(error.body)
         );
     },
     addList: function(){
@@ -60,14 +62,14 @@ export default {
 
             this.list.title = "";
           },
-          error => console.error(error)
+          error => this.errors.push(error.body)
         );
     },
     removeList: function(id){
       this.$todoApi.listsIdDelete(id)
         .then(
           () => this.lists = this.lists.filter(list => list.id != id),
-          error => console.error(error)
+          error => this.errors.push(error.body)
         );
     }
   },

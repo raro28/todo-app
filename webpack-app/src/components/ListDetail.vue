@@ -14,6 +14,7 @@
     <button v-on:click="editList">
       <font-awesome-icon icon="edit"></font-awesome-icon>
     </button>
+    <error-view v-bind:errors="errors"></error-view>
   </div>
 </template>
 
@@ -51,7 +52,8 @@ export default {
         id: 0,
         title: "title"
       },
-      tasks: []
+      tasks: [],
+      errors: []
     };
   },
   computed: {},
@@ -61,7 +63,7 @@ export default {
       this.$todoApi.listsIdTasksGet(this.list.id, {page:1, size: 5})
         .then(
           response => this.tasks = response.data,
-          error => console.error(error)
+          error => this.errors.push(error.body)
         );
     },
     addTask: function(){
@@ -77,14 +79,14 @@ export default {
             this.task.title = "";
             this.task.completed = false;
           },
-          error => console.error(error)
+          error => this.errors.push(error.body)
         );
     },
     editList: function(){
       this.$todoApi.listsIdPut(this.list.id, this.$removeId(this.list))
         .then(
           response => {},
-          error => console.error(error)
+          error => this.errors.push(error.body)
         );
     },
     toggleStatus: function(id){
@@ -97,7 +99,8 @@ export default {
       this.$todoApi.tasksIdDelete(id)
         .then(
           ()=> this.tasks = this.tasks.filter(task => task.id != id),
-          error => console.error(error));
+          error => this.errors.push(error.body)
+        );
     }
   },
   beforeCreate: function() {},
@@ -107,7 +110,7 @@ export default {
     this.$todoApi.listsIdGet(this.$route.params.id)
       .then(
         response => this.list = response,
-        error => console.error(error)
+        error => this.errors.push(error.body)
       )
       .then(() => {
         this.list.id = this.$route.params.id;
