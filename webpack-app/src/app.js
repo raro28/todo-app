@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import VueLogger from 'vuejs-logger';
 import Main from './components/Main.vue';
 import errorView from './components/errorView.vue';
 import router from './router';
@@ -12,9 +13,22 @@ import {faEdit} from '@fortawesome/free-solid-svg-icons';
 import {faComments} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
+Vue.config.productionTip = false
+
+const options = {
+  isEnabled: true,
+  logLevel : Vue.config.productionTip  ? 'error' : 'debug',
+  stringifyArguments : false,
+  showLogLevel : true,
+  showMethodName : true,
+  separator: '|',
+  showConsoleColors: true
+};
+Vue.use(VueLogger, options);
+
 const TodoListApi = require('todo_list_api');
 const todoApi = new TodoListApi.CrudApi();
-todoApi.apiClient.basePath = 'http://localhost:8080';
+todoApi.apiClient.basePath = 'http://mumei:8080';
 
 //https://stackoverflow.com/questions/48650107/use-axios-globally-in-all-my-components-vue
 Vue.prototype.$todoApi = todoApi;
