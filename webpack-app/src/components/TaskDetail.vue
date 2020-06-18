@@ -61,7 +61,8 @@ export default {
     refreshNotes: function() {
       this.$todoApi.tasksIdNotesGet(this.task.id, {page:1, size: 5})
         .then(
-          response => this.notes = response.data
+          response => this.notes = response.data,
+          error => this.errors.push(error.body)
         );
     },
     addNote: function(){

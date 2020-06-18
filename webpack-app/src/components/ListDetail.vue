@@ -91,9 +91,15 @@ export default {
     },
     toggleStatus: function(id){
       let task = this.tasks.filter(task => task.id == id)[0];
-      task.completed = !task.completed;
 
-      this.$todoApi.tasksIdPut(id, this.$removeId(task));
+      let taskRq = this.$removeId(task);
+      taskRq.completed = !taskRq.completed;
+
+      this.$todoApi.tasksIdPut(id, taskRq)
+        .then(
+          ()=> task.completed = taskRq.completed,
+          error => this.errors.push(error.body)
+        );
     },
     removeTask: function(id){
       this.$todoApi.tasksIdDelete(id)
