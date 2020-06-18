@@ -23,8 +23,7 @@ export default {
   watch: {},
   methods: {
     editNote: function(){
-      //TODO: it is super weird that the generated client requires {note: ...}
-      this.$todoApi.notesIdPut(this.note.id, {note: this.note})
+      this.$todoApi.notesIdPut(this.note.id, this.$removeId(this.note))
         .then(
           ()=> {},
           error => console.error(error)

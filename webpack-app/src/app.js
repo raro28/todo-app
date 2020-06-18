@@ -12,11 +12,17 @@ import {faComments} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 
 const TodoListApi = require('todo_list_api');
-const todoApi = new TodoListApi.DefaultApi();
+const todoApi = new TodoListApi.CrudApi();
 todoApi.apiClient.basePath = 'http://localhost:8080';
 
 //https://stackoverflow.com/questions/48650107/use-axios-globally-in-all-my-components-vue
 Vue.prototype.$todoApi = todoApi;
+Vue.prototype.$removeId = function(obj){
+    let result = Object.assign({}, obj);
+    delete result.id;
+
+    return result;
+}
 
 library.add(
     faTrash,

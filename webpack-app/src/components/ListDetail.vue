@@ -5,7 +5,7 @@
     <todo-list v-bind:tasks="tasks" v-on:toggle-status="toggleStatus" v-on:remove-task="removeTask"></todo-list>
     <hr />
     <input type="text" placeholder="title" v-model:value="task.title" />
-    <input type="checkbox" v-model:checked="task.isCompleted"> Completed
+    <input type="checkbox" v-model:checked="task.completed"> Completed
     <button v-on:click="addTask">
       <font-awesome-icon icon="plus-circle"></font-awesome-icon>
     </button>
@@ -29,7 +29,7 @@ const todoList = {
           <font-awesome-icon icon="thumbtack"></font-awesome-icon>{{task.id}}
         </router-link> 
         {{task.title}}
-        <button v-on:click="$emit('toggle-status', task.id)"><font-awesome-icon :icon="task.isCompleted ? 'check' : 'spinner'"></font-awesome-icon></button>
+        <button v-on:click="$emit('toggle-status', task.id)"><font-awesome-icon :icon="task.completed ? 'check' : 'spinner'"></font-awesome-icon></button>
         <button v-on:click="$emit('remove-task', task.id)"><font-awesome-icon icon='trash'></font-awesome-icon></button>
       </li>
     </ul>
@@ -45,7 +45,7 @@ export default {
     return {
       task: {
         title: "",
-        isCompleted: false
+        completed: false
       },
       list: {
         id: 0,
@@ -71,17 +71,17 @@ export default {
             this.tasks.push({
               id: response.id,
               title: this.task.title,
-              isCompleted: this.task.isCompleted
+              completed: this.task.completed
             });
 
             this.task.title = "";
-            this.task.isCompleted = false;
+            this.task.completed = false;
           },
           error => console.error(error)
         );
     },
     editList: function(){
-      this.$todoApi.listsIdPut(this.list.id, this.list)
+      this.$todoApi.listsIdPut(this.list.id, this.$removeId(this.list))
         .then(
           response => {},
           error => console.error(error)
@@ -89,9 +89,9 @@ export default {
     },
     toggleStatus: function(id){
       let task = this.tasks.filter(task => task.id == id)[0];
-      task.isCompleted = !task.isCompleted;
+      task.completed = !task.completed;
 
-      this.$todoApi.tasksIdPut(id, task);
+      this.$todoApi.tasksIdPut(id, this.$removeId(task));
     },
     removeTask: function(id){
       this.$todoApi.tasksIdDelete(id)

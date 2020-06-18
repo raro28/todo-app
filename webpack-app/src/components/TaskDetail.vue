@@ -11,7 +11,7 @@
     </button>
     <hr />
     <input type="text" placeholder="title" v-model="task.title" />
-    <input type="checkbox" v-model:checked="task.isCompleted" /> Completed
+    <input type="checkbox" v-model:checked="task.completed" /> Completed
     <button v-on:click = "editTask">
       <font-awesome-icon icon="edit"></font-awesome-icon>
     </button>
@@ -45,7 +45,7 @@ export default {
       task: {
         id: -1,
         title: "",
-        isCompleted: false
+        completed: false
       },
       note: {
         content: ""
@@ -57,7 +57,7 @@ export default {
   watch: {},
   methods: {
     refreshNotes: function() {
-      this.$todoApi.tasksIdNotesGet(this.task.id)
+      this.$todoApi.tasksIdNotesGet(this.task.id, {page:1, size: 5})
         .then(
           response => this.notes = response.data
         );
@@ -77,7 +77,7 @@ export default {
         );
     },
     editTask: function(){
-      this.$todoApi.tasksIdPut(this.task.id, this.task)
+      this.$todoApi.tasksIdPut(this.task.id, this.$removeId(this.task))
         .then(
           ()=>{},
           error=> console.error(error)
