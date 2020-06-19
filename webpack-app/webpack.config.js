@@ -13,6 +13,9 @@ module.exports = {
         publicPath: '/'
     },
     devServer:{
+        allowedHosts: [
+            'mumei'
+        ],
         port: 9090,
         hot: true,
         open: true,

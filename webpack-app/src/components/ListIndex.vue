@@ -28,7 +28,7 @@ const todoLists= {
 };
 
 export default {
-  name: "Home",
+  name: "ListIndex",
   components: {
     todoLists
   },
