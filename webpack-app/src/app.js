@@ -3,6 +3,7 @@ import VueLogger from 'vuejs-logger';
 import Main from './components/Main.vue';
 import errorView from './components/errorView.vue';
 import router from './router';
+import todoApi from './api';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {faThumbtack}  from '@fortawesome/free-solid-svg-icons';
@@ -25,19 +26,7 @@ const options = {
   showConsoleColors: true
 };
 Vue.use(VueLogger, options);
-
-const TodoListApi = require('todo_list_api');
-const todoApi = new TodoListApi.CrudApi();
-todoApi.apiClient.basePath = 'http://mumei:8080';
-
-//https://stackoverflow.com/questions/48650107/use-axios-globally-in-all-my-components-vue
-Vue.prototype.$todoApi = todoApi;
-Vue.prototype.$removeId = function(obj){
-    let result = Object.assign({}, obj);
-    delete result.id;
-
-    return result;
-}
+Vue.use(todoApi);
 
 library.add(
     faTrash,
