@@ -71,6 +71,12 @@ export class TodoApi{
     }
 }
 
+export function setTokenTodoApi(token, refreshToken){
+    let oAuth2 =  TodoListApi.ApiClient.instance.authentications['oAuth2'];
+    oAuth2.accessToken = token;
+    oAuth2.refreshToken = refreshToken;
+}
+
 export default{
     install: function (Vue){
         //https://stackoverflow.com/questions/48650107/use-axios-globally-in-all-my-components-vue
