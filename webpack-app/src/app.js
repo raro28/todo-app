@@ -4,6 +4,7 @@ import Main from './components/Main.vue';
 import errorView from './components/errorView.vue';
 import router from './router';
 import todoApi from './api';
+import auth from './auth'
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {faThumbtack}  from '@fortawesome/free-solid-svg-icons';
@@ -27,6 +28,7 @@ const options = {
 };
 Vue.use(VueLogger, options);
 Vue.use(todoApi);
+Vue.use(auth);
 
 library.add(
     faTrash,
