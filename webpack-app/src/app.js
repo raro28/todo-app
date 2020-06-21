@@ -4,6 +4,7 @@ import Main from './components/Main.vue';
 import errorView from './components/errorView.vue';
 import router from './router';
 import todoApi from './api';
+import {initTodoApi} from './api';
 import {library} from '@fortawesome/fontawesome-svg-core';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {faThumbtack}  from '@fortawesome/free-solid-svg-icons';
@@ -42,5 +43,8 @@ Vue.component('error-view', errorView);
 
 new Vue({
     render: (h) => h(Main),
-    router: router
+  router: router,
+  created: function(){
+    initTodoApi('http://mumei:8080');
+  }
 }).$mount('#app');

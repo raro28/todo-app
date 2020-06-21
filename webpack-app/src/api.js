@@ -1,7 +1,10 @@
 const TodoListApi = require('todo_list_api');
-TodoListApi.ApiClient.instance.basePath = 'http://mumei:8080';
 
 export const todoApi = new TodoListApi.CrudApi();
+
+export function initTodoApi(basePath){
+    TodoListApi.ApiClient.instance.basePath = basePath;
+}
 
 export default{
     install: function (Vue){
