@@ -1,9 +1,10 @@
 <template>
   <div>
     <h1>Task {{task.id}}:{{task.title}}</h1>
-    <router-link to="/lists">/lists</router-link>
+    <router-link to="/lists">/lists</router-link> <br>
+    |<span  v-for="i in page.totalPages" v-bind:key="i"><a href="#" v-on:click="goPage(i)">{{i}}</a>|</span>
     <hr />
-    <task-note v-for="note in notes" v-bind:key="note.id" v-bind:note="note" v-on:remove-note="removeNote"></task-note>
+    <task-note v-for="note in page.data" v-bind:key="note.id" v-bind:note="note" v-on:remove-note="removeNote"></task-note>
     <hr />
     <textarea rows="4" v-model="note.content"></textarea>
     <button v-on:click = "addNote">
@@ -51,7 +52,13 @@ export default {
       note: {
         content: ""
       },
-      notes: [],
+      page: {
+        size: 5,
+        current: 1,
+        total: 0,
+        totalPages: 0,
+        data: []
+      },
       errors: []
     };
   },
@@ -59,9 +66,9 @@ export default {
   watch: {},
   methods: {
     refreshNotes: function() {
-      this.$todoApi.tasksIdNotesGet(this.task.id, {page:1, size: 5})
+      this.$todoApi.tasksIdNotesGet(this.task.id, {page: this.page.current, size: this.page.size})
         .then(
-          response => this.notes = response.data,
+          response => this.page = response,
           error => this.errors.push(error.body)
         );
     },
@@ -69,7 +76,7 @@ export default {
       this.$todoApi.tasksIdNotesPost(this.task.id, this.note)
         .then(
           response => {
-            this.notes.push({
+            this.page.data.push({
               id: response.id,
               content: this.note.content
             });
@@ -89,9 +96,13 @@ export default {
     removeNote: function(id){
       this.$todoApi.notesIdDelete(id)
         .then(
-          ()=> this.notes = this.notes.filter(note => note.id != id),
+          ()=> this.page.data = this.page.data.filter(note => note.id != id),
           error => this.errors.push(error.body)
         );
+    },
+    goPage: function(page){
+      this.page.current = page;
+      this.refreshNotes();
     }
   },
   beforeCreate: function(){},
