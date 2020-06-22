@@ -1,7 +1,8 @@
 <template>
   <div>
     <h1>Lists</h1>
-    <todo-lists v-bind:lists="lists" v-on:remove-list="removeList"></todo-lists>
+    |<span  v-for="i in page.totalPages" v-bind:key="i"><router-link v-bind:to="'\/lists?page='+i+'&size='+$route.query.size">{{i}}</router-link>|</span>
+    <todo-lists v-bind:lists="page.data" v-on:remove-list="removeList"></todo-lists>
     <input type="text" placeholder="title" v-model:value="list.title" />
     <button v-on:click="addList">
       <font-awesome-icon icon="plus-circle"></font-awesome-icon>
@@ -37,17 +38,29 @@ export default {
       list: {
         title: ""
       },
-      lists: [],
+      page: {
+        size: 5,
+        current: 1,
+        total: 0,
+        totalPages: 0,
+        data: []
+      },
       errors: []
     };
   },
   computed: {},
-  watch: {},
+  watch: {
+    $route(to, from) {
+      this.page.size = this.$route.query.size;
+      this.page.current = this.$route.query.page;
+      this.refreshList();
+    }
+  },
   methods: {
     refreshList: function() {
-      this.$todoApi.listsGet({page:1, size: 5})
+      this.$todoApi.listsGet({page: this.$route.query.page, size: this.$route.query.size})
         .then(
-          response => this.lists = response.data,
+          response => this.page = response,
           error => this.errors.push(error.body)
         );
     },
@@ -55,7 +68,7 @@ export default {
       this.$todoApi.listsPost(this.list)
         .then(
           response => {
-            this.lists.push({
+            this.page.data.push({
               id: response.id,
               title: this.list.title
             });
@@ -68,14 +81,17 @@ export default {
     removeList: function(id){
       this.$todoApi.listsIdDelete(id)
         .then(
-          () => this.lists = this.lists.filter(list => list.id != id),
+          () => this.page.data = this.page.data.filter(list => list.id != id),
           error => this.errors.push(error.body)
         );
     }
   },
   beforeCreate: function() {},
   created: function() {},
-  beforeMount: function() {},
+  beforeMount: function() {
+    this.$route.query.page = this.$route.query.page ?? this.page.current;
+    this.$route.query.size = this.$route.query.size ?? this.page.size;
+  },
   mounted: function() {
     this.refreshList();
   },
