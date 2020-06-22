@@ -1,8 +1,9 @@
 <template>
   <div>
     <h1>List {{list.id}}:{{list.title}}</h1>
-    <router-link to="/lists">/lists</router-link>
-    <todo-list v-bind:tasks="tasks" v-on:toggle-status="toggleStatus" v-on:remove-task="removeTask"></todo-list>
+    <router-link to="/lists">/lists</router-link> <br>
+    |<span  v-for="i in page.totalPages" v-bind:key="i"><a href="#" v-on:click="goPage(i)">{{i}}</a>|</span>
+    <todo-list v-bind:tasks="page.data" v-on:toggle-status="toggleStatus" v-on:remove-task="removeTask"></todo-list>
     <hr />
     <input type="text" placeholder="title" v-model:value="task.title" />
     <input type="checkbox" v-model:checked="task.completed"> Completed
@@ -52,7 +53,13 @@ export default {
         id: 0,
         title: "title"
       },
-      tasks: [],
+      page: {
+        size: 5,
+        current: 1,
+        total: 0,
+        totalPages: 0,
+        data: []
+      },
       errors: []
     };
   },
@@ -60,9 +67,9 @@ export default {
   watch: {},
   methods: {
     refreshTasks: function() {
-      this.$todoApi.listsIdTasksGet(this.list.id, {page:1, size: 5})
+      this.$todoApi.listsIdTasksGet(this.list.id, {page: this.page.current, size: this.page.size})
         .then(
-          response => this.tasks = response.data,
+          response => this.page = response,
           error => this.errors.push(error.body)
         );
     },
@@ -70,7 +77,7 @@ export default {
       this.$todoApi.listsIdTasksPost(this.list.id, this.task)
         .then(
           response => {
-            this.tasks.push({
+            this.page.data.push({
               id: response.id,
               title: this.task.title,
               completed: this.task.completed
@@ -90,7 +97,7 @@ export default {
         );
     },
     toggleStatus: function(id){
-      let task = this.tasks.filter(task => task.id == id)[0];
+      let task = this.page.data.filter(task => task.id == id)[0];
 
       let taskRq = this.$removeId(task);
       taskRq.completed = !taskRq.completed;
@@ -104,9 +111,13 @@ export default {
     removeTask: function(id){
       this.$todoApi.tasksIdDelete(id)
         .then(
-          ()=> this.tasks = this.tasks.filter(task => task.id != id),
+          ()=> this.page.data = this.page.data.filter(task => task.id != id),
           error => this.errors.push(error.body)
         );
+    },
+    goPage: function(page){
+      this.page.current = page;
+      this.refreshTasks();
     }
   },
   beforeCreate: function() {},
