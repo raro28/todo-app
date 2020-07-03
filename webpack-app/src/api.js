@@ -72,9 +72,12 @@ export class TodoApi{
 }
 
 export function setTokenTodoApi(token, refreshToken){
-    let oAuth2 =  TodoListApi.ApiClient.instance.authentications['oAuth2'];
-    oAuth2.accessToken = token;
-    oAuth2.refreshToken = refreshToken;
+    console.log(refreshToken);
+    //https://github.com/ChristianHuff-DEV/vuejs-quarkus-oauth/blob/f59107918b3352419fa75197790862e2f7f49d7a/webclient-service/src/api.js
+    axios.interceptors.request.use((config) => {
+        config.headers.common.Authorization = 'Bearer ' + token;
+        return config;
+    });
 }
 
 export default{
