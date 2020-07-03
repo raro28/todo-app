@@ -9,6 +9,17 @@ import { authService } from './auth'
 
 Vue.use(Router);
 
+//https://medium.com/js-dojo/how-to-implement-route-guard-in-vue-js-9929c93a13db
+function checkLogin(to, from, next){
+    authService.isUserLoggedIn().then(loggedIn => {
+        if(loggedIn){
+            next();
+        } else{
+            authService.login();
+        }
+    });
+}
+
 const routes =  [
     {
         path: '/home',
@@ -18,21 +29,25 @@ const routes =  [
     {
         path: '/lists',
         name: 'lists',
+        beforeEnter: checkLogin,
         component: ListIndex
     },
     {
         path: '/lists/:id',
         name: 'listDetail',
+        beforeEnter: checkLogin,
         component: ListDetail
     },
     {
         path: '/tasks/:id',
         name: 'taskDetail',
+        beforeEnter: checkLogin,
         component: TaskDetail
     },
     {
         path: '/notes/:id',
         name: 'noteDetail',
+        beforeEnter: checkLogin,
         component: NoteDetail
     }
 ];
