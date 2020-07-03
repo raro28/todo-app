@@ -1,4 +1,5 @@
 //https://github.com/ChristianHuff-DEV/vuejs-quarkus-oauth/blob/f59107918b3352419fa75197790862e2f7f49d7a/webclient-service/src/auth.js
+import axios from 'axios';
 import { UserManager, WebStorageStateStore } from 'oidc-client'
 import { fireUserLoggedInEvent, fireUserLoggedOutEvent } from './eventBus'
 
@@ -127,6 +128,15 @@ userManager.events.addUserSignedOut(() => fireUserLoggedOutEvent())
  * Create and expose an instance of the auth service.
  */
 export const authService = new AuthService()
+
+//https://github.com/ChristianHuff-DEV/vuejs-quarkus-oauth/blob/f59107918b3352419fa75197790862e2f7f49d7a/webclient-service/src/api.js
+export function initAxios () {
+  axios.interceptors.request.use(async (config) => {
+    let accessToken = await authService.getAccessToken()
+    config.headers.common.Authorization = 'Bearer ' + accessToken
+    return config
+  })
+}
 
 /**
  * Default export to register the authentication service in the global Vue instance.

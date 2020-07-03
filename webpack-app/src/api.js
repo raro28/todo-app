@@ -71,15 +71,6 @@ export class TodoApi{
     }
 }
 
-export function setTokenTodoApi(token, refreshToken){
-    console.log(refreshToken);
-    //https://github.com/ChristianHuff-DEV/vuejs-quarkus-oauth/blob/f59107918b3352419fa75197790862e2f7f49d7a/webclient-service/src/api.js
-    axios.interceptors.request.use((config) => {
-        config.headers.common.Authorization = 'Bearer ' + token;
-        return config;
-    });
-}
-
 export default{
     install: function (Vue){
         //https://stackoverflow.com/questions/48650107/use-axios-globally-in-all-my-components-vue
