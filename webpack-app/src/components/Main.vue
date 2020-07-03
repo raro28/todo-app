@@ -34,9 +34,11 @@ export default {
   mounted () {
     this.$auth.isUserLoggedIn()
       .then(isLoggedIn => {
-        authService.getAccessToken().then((accessToken) => {
-            setTokenTodoApi(accessToken, null);
-        });
+        if(isLoggedIn){
+          authService.getAccessToken().then((accessToken) => {
+              setTokenTodoApi(accessToken, null);
+          });
+        }
         this.isUserLoggedIn = isLoggedIn;
       })
       // If somehting goes wrong we assume no user is logged in
