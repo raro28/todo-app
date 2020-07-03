@@ -45,6 +45,22 @@ export class TodoApi{
     tasksIdDelete(id){
         return axios.delete(`${this._basePath}/tasks/${id}`);
     }
+
+    tasksIdGet(id){
+        return axios.get(`${this._basePath}/tasks/${id}`);
+    }
+
+    tasksIdNotesGet(id, qs){
+        return axios.get(`${this._basePath}/tasks/${id}/notes?page=${qs.page}&size=${qs.size}`);
+    }
+
+    tasksIdNotesPost(id, note){
+        return axios.post(`${this._basePath}/tasks/${id}/notes`, note);
+    }
+
+    notesIdDelete(id){
+        return axios.delete(`${this._basePath}/notes/${id}`);
+    }
 }
 
 export default{
