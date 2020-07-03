@@ -1,4 +1,0 @@
-[submodule "webpack-app/docs/todo-api-spec"]
-	path = webpack-app/docs/todo-api-spec
-	url = https://github.com/raro28/todo-api-spec
-	branch = develop
