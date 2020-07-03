@@ -60,30 +60,30 @@ export default {
     refreshList: function() {
       this.$todoApi.listsGet({page: this.$route.query.page, size: this.$route.query.size})
         .then(
-          response => this.page = response,
-          error => this.errors.push(error.body)
-        );
+          response => this.page = response.data
+        )
+        .catch(error => this.errors.push(error.response.data));
     },
     addList: function(){
       this.$todoApi.listsPost(this.list)
         .then(
           response => {
             this.page.data.push({
-              id: response.id,
+              id: response.data.id,
               title: this.list.title
             });
 
             this.list.title = "";
-          },
-          error => this.errors.push(error.body)
-        );
+          }
+        )
+        .catch(error => this.errors.push(error.response.data));
     },
     removeList: function(id){
       this.$todoApi.listsIdDelete(id)
         .then(
-          () => this.page.data = this.page.data.filter(list => list.id != id),
-          error => this.errors.push(error.body)
-        );
+          () => this.page.data = this.page.data.filter(list => list.id != id)
+        )
+        .catch(error => this.errors.push(error.response.data));
     }
   },
   beforeCreate: function() {},

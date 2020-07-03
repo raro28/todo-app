@@ -68,37 +68,34 @@ export default {
     refreshNotes: function() {
       this.$todoApi.tasksIdNotesGet(this.task.id, {page: this.page.current, size: this.page.size})
         .then(
-          response => this.page = response,
-          error => this.errors.push(error.body)
-        );
+          response => this.page = response.data
+        )
+        .catch(error => this.errors.push(error.response.data));
     },
     addNote: function(){
       this.$todoApi.tasksIdNotesPost(this.task.id, this.note)
         .then(
           response => {
             this.page.data.push({
-              id: response.id,
+              id: response.data.id,
               content: this.note.content
             });
 
             this.note.content = "";
-          },
-          error => this.errors.push(error.body)
-        );
+          }
+        )
+        .catch(error => this.errors.push(error.response.data));
     },
     editTask: function(){
       this.$todoApi.tasksIdPut(this.task.id, this.$removeId(this.task))
-        .then(
-          ()=>{},
-          error=> this.errors.push(error.body)
-        );
+        .catch(error => this.errors.push(error.response.data));
     },
     removeNote: function(id){
       this.$todoApi.notesIdDelete(id)
         .then(
-          ()=> this.page.data = this.page.data.filter(note => note.id != id),
-          error => this.errors.push(error.body)
-        );
+          ()=> this.page.data = this.page.data.filter(note => note.id != id)
+        )
+        .catch(error => this.errors.push(error.response.data));
     },
     goPage: function(page){
       this.page.current = page;
@@ -111,9 +108,9 @@ export default {
   mounted: function() {
     this.$todoApi.tasksIdGet(this.$route.params.id)
       .then(
-        response => this.task = response,
-        error => this.errors.push(error.body)
-      )
+        response => this.task = response.data
+        )
+      .catch(error => this.errors.push(error.response.data))
       .then(() => {
         this.task.id = this.$route.params.id;
         this.refreshNotes();
