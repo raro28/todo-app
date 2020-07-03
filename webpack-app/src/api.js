@@ -21,6 +21,30 @@ export class TodoApi{
     listsIdDelete(id){
         return axios.delete(`${this._basePath}/lists/${id}`);
     }
+
+    listsIdGet(id){
+        return axios.get(`${this._basePath}/lists/${id}`);
+    }
+
+    listsIdTasksGet(id, qs){
+        return axios.get(`${this._basePath}/lists/${id}/tasks?page=${qs.page}&size=${qs.size}`);
+    }
+
+    listsIdPut(id, list){
+        return axios.put(`${this._basePath}/lists/${id}`, list);
+    }
+
+    listsIdTasksPost(id, task){
+        return axios.post(`${this._basePath}/lists/${id}/tasks`, task);
+    }
+
+    tasksIdPut(id, task){
+        return axios.put(`${this._basePath}/tasks/${id}`, task);
+    }
+
+    tasksIdDelete(id){
+        return axios.delete(`${this._basePath}/tasks/${id}`);
+    }
 }
 
 export default{

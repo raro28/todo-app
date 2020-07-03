@@ -69,32 +69,29 @@ export default {
     refreshTasks: function() {
       this.$todoApi.listsIdTasksGet(this.list.id, {page: this.page.current, size: this.page.size})
         .then(
-          response => this.page = response,
-          error => this.errors.push(error.body)
-        );
+          response => this.page = response.data
+        )
+        .catch(error => this.errors.push(error.response.data));
     },
     addTask: function(){
       this.$todoApi.listsIdTasksPost(this.list.id, this.task)
         .then(
           response => {
             this.page.data.push({
-              id: response.id,
+              id: response.data.id,
               title: this.task.title,
               completed: this.task.completed
             });
 
             this.task.title = "";
             this.task.completed = false;
-          },
-          error => this.errors.push(error.body)
-        );
+          }
+        )
+        .catch(error => this.errors.push(error.response.data));
     },
     editList: function(){
       this.$todoApi.listsIdPut(this.list.id, this.$removeId(this.list))
-        .then(
-          response => {},
-          error => this.errors.push(error.body)
-        );
+        .catch(error => this.errors.push(error.response.data));
     },
     toggleStatus: function(id){
       let task = this.page.data.filter(task => task.id == id)[0];
@@ -104,16 +101,16 @@ export default {
 
       this.$todoApi.tasksIdPut(id, taskRq)
         .then(
-          ()=> task.completed = taskRq.completed,
-          error => this.errors.push(error.body)
-        );
+          ()=> task.completed = taskRq.completed
+        )
+        .catch(error => this.errors.push(error.response.data));
     },
     removeTask: function(id){
       this.$todoApi.tasksIdDelete(id)
         .then(
-          ()=> this.page.data = this.page.data.filter(task => task.id != id),
-          error => this.errors.push(error.body)
-        );
+          ()=> this.page.data = this.page.data.filter(task => task.id != id)
+        )
+        .catch(error => this.errors.push(error.response.data));
     },
     goPage: function(page){
       this.page.current = page;
@@ -126,13 +123,13 @@ export default {
   mounted: function() {
     this.$todoApi.listsIdGet(this.$route.params.id)
       .then(
-        response => this.list = response,
-        error => this.errors.push(error.body)
+        response => this.list = response.data
       )
       .then(() => {
         this.list.id = this.$route.params.id;
         this.refreshTasks();
-      });
+      })
+      .catch(error => this.errors.push(error.response.data));
   },
   beforeUpdate: function() {},
   updated: function() {}
