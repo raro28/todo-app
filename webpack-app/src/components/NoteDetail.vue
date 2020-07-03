@@ -26,10 +26,7 @@ export default {
   methods: {
     editNote: function(){
       this.$todoApi.notesIdPut(this.note.id, this.$removeId(this.note))
-        .then(
-          ()=> {},
-          error => this.errors.push(error.body)
-        );
+        .catch(error => this.errors.push(error.body));
     }
   },
   beforeCreate: function(){},
@@ -39,10 +36,11 @@ export default {
     this.$todoApi.notesIdGet(this.$route.params.id)
       .then(
         response => {
-          this.note = response;
+          this.note = response.data;
           this.note.id = this.$route.params.id;
         }
-      );
+      )
+      .catch(error => this.errors.push(error.body));
   },
   beforeUpdate: function(){},
   updated: function(){},

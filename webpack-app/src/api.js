@@ -61,6 +61,14 @@ export class TodoApi{
     notesIdDelete(id){
         return axios.delete(`${this._basePath}/notes/${id}`);
     }
+
+    notesIdGet(id){
+        return axios.get(`${this._basePath}/notes/${id}`);
+    }
+
+    notesIdPut(id, note){
+        return axios.put(`${this._basePath}/notes/${id}`, note);
+    }
 }
 
 export default{
