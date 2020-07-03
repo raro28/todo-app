@@ -3,10 +3,12 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const { join } = require('path');
 const { VueLoaderPlugin } = require('vue-loader');
 const { HotModuleReplacementPlugin } = require('webpack');
+//https://stackoverflow.com/a/46734082
+require("@babel/polyfill");
 
 module.exports = {
     mode: 'development',
-    entry: join(__dirname, './src/app.js'),
+    entry: ["@babel/polyfill", join(__dirname, './src/app.js')],
     output: {
         filename: 'app.bundled.js',
         path: join(__dirname, 'build'),
